@@ -12,7 +12,7 @@
                 <div class="alert alert-info">
                     <a class="close" ng-click="remove($index)"><img src="/images/delete.png"></a>
                     <b> <input ng-model="e.title"></b>
-                    {{e.start | date:"MMM dd"}} - {{e.end | date:"MMM dd"}}
+                    <div>{{e.start | date:"MM/dd"}} - {{e.end | date:"MM/dd"}}</div>
                 </div>
             </li>
         </ul>
