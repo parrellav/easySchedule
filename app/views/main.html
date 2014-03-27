@@ -1,0 +1,28 @@
+<div class="header">
+  <h3 class="text-muted">easySchedule</h3>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <button type="button" class="btn btn-primary" ng-click="addEvent()">
+            Add Event
+        </button>
+        <ul class="list-unstyled">
+            <li ng-repeat="e in events">
+                <div class="alert alert-info">
+                    <a class="close" ng-click="remove($index)"><img src="/images/delete.png"></a>
+                    <b> <input ng-model="e.title"></b>
+                    {{e.start | date:"MMM dd"}} - {{e.end | date:"MMM dd"}}
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="col-md-8">
+        <div class="btn-group">
+            <button class="btn btn-success" ng-click="changeView('agendaDay', myCalendar1)">Day</button>
+            <button class="btn btn-success" ng-click="changeView('agendaWeek', myCalendar1)">Week</button>
+            <button class="btn btn-success" ng-click="changeView('month', myCalendar1)">Month</button>
+        </div>
+        <div ui-calendar="uiConfig.calendar" calendar="myCalendar1" class="calendar" ng-model="eventSources"></div>
+    </div>
+</div>
