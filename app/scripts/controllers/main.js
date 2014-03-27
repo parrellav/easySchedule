@@ -40,15 +40,6 @@ scheduleControllers.controller('MainCtrl', function ($scope) {
         console.log(event.title + ' was clicked ');
     };
 
-    /* alert on Drop */
-    $scope.alertOnDrop = function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view){
-        $scope.alertMessage = ('Event Droped to make dayDelta ' + dayDelta);
-    };
-    /* alert on Resize */
-    $scope.alertOnResize = function(event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ){
-        $scope.alertMessage = ('Event Resized to make dayDelta ' + minuteDelta);
-    };
-
     /* Change View */
     $scope.changeView = function(view,calendar) {
         calendar.fullCalendar('changeView',view);
@@ -64,8 +55,6 @@ scheduleControllers.controller('MainCtrl', function ($scope) {
                 right: 'today prev,next'
             },
             eventClick: $scope.alertOnEventClick,
-            eventDrop: $scope.alertOnDrop,
-            eventResize: $scope.alertOnResize
         }
     };
 
