@@ -13,17 +13,6 @@ scheduleControllers.controller('MainCtrl', ['$scope', '$http', function ($scope,
     $scope.events = [];
     $scope.eventSources = [];
 
-    /* event source that contains custom events on the scope */
-//    $scope.events = [
-//        {title: 'All Day Event',start: new Date(y, m, 1)},
-//        {title: 'Long Event',start: new Date(y, m, d - 5),end: new Date(y, m, d - 2)},
-//        {id: 999,title: 'Repeating Event',start: new Date(y, m, d - 3, 16, 0),allDay: false},
-//        {id: 999,title: 'Repeating Event',start: new Date(y, m, d + 4, 16, 0),allDay: false},
-//        {title: 'Birthday Party',start: new Date(y, m, d + 1, 19, 0),end: new Date(y, m, d + 1, 22, 30),allDay: false},
-//    ];
-//    console.log($scope.events);
-
-
     $http.get(url).
         success(function(data, status, headers, config) {
             for(var i = 0; i < data.length; i++) {
@@ -32,11 +21,9 @@ scheduleControllers.controller('MainCtrl', ['$scope', '$http', function ($scope,
             $scope.eventSources.push($scope.events);
         }).
         error(function(data, status, headers, config) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
+            window.alert("An error has occurred.");
         });
 
-    /* add custom event*/
     $scope.addEvent = function() {
         var newEvent =
         {
@@ -46,11 +33,11 @@ scheduleControllers.controller('MainCtrl', ['$scope', '$http', function ($scope,
             allDay: false,
             className: ['openSesame']
         }
-        $http.post(url, newEvent).success(addToCalendar);
-
+        $http.post(url, newEvent).success(function(data, status, headers, config) {
+            $scope.events.push(data);
+        });
     };
 
-    /* remove event */
     $scope.remove = function(index) {
         var myId = $scope.events[index]._id;
         console.log('deleting ' + myId);
@@ -64,14 +51,23 @@ scheduleControllers.controller('MainCtrl', ['$scope', '$http', function ($scope,
         });
     };
 
-    /* alert on eventClick */
-    $scope.alertOnEventClick = function( event, allDay, jsEvent, view ){
-        console.log(event.title + ' was clicked ');
-    };
-
-    /* Change View */
     $scope.changeView = function(view,calendar) {
         calendar.fullCalendar('changeView',view);
+    };
+
+    $scope.editEvent = function(event, dayDelta, minuteDelta, revertFunc, jsEvent, ui, view ){
+        console.log(event._id + " resized");
+        updateEvent(event);
+    };
+
+    $scope.eventDrop = function( event, allDay, jsEvent, view ){
+        console.log(event + ' dropped ');
+        updateEvent(event);
+    };
+
+    $scope.change = function(event) {
+        console.log(event + " changed");
+        updateEvent(event);
     };
 
     $scope.uiConfig = {
@@ -82,14 +78,27 @@ scheduleControllers.controller('MainCtrl', ['$scope', '$http', function ($scope,
                 left: 'title',
                 center: '',
                 right: 'today prev,next'
-            }
+            },
+            eventResize: $scope.editEvent,
+            eventDrop: $scope.eventDrop
         }
     };
 
-    var addToCalendar = function(data, status, headers, config) {
-        $scope.events.push(data);
-    }
+    var updateEvent = function(event) {
 
+        var updatedEvent =
+        {
+            title: event.title,
+            start: event.start,
+            end: event.end,
+            allDay: event.allDay,
+            className: event.className
+        }
+
+        $http.put(url + '/' + event._id, updatedEvent).success(function(data, status, headers, config) {
+            console.log(data);
+        });
+    };
 
   }]);
 
