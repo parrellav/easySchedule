@@ -52,7 +52,16 @@ scheduleControllers.controller('MainCtrl', ['$scope', '$http', function ($scope,
 
     /* remove event */
     $scope.remove = function(index) {
-        $scope.events.splice(index,1);
+        var myId = $scope.events[index]._id;
+        console.log('deleting ' + myId);
+        $http.delete(url + '/' + myId).success(function(data, status, headers, config) {
+            for(var i = 0; i < $scope.events.length; i++) {
+                if($scope.events[i]._id === myId) {
+                    $scope.events.splice(i,1);
+                    break;
+                }
+            }
+        });
     };
 
     /* alert on eventClick */
@@ -80,6 +89,7 @@ scheduleControllers.controller('MainCtrl', ['$scope', '$http', function ($scope,
     var addToCalendar = function(data, status, headers, config) {
         $scope.events.push(data);
     }
+
 
   }]);
 
